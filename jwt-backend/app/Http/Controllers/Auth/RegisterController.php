@@ -71,6 +71,6 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        return respostaCors(dadosUsuario($usuario), 200);
+        return respostaCors(\App\JWTValidator::dadosUsuario($usuario), 200);
     }
 }

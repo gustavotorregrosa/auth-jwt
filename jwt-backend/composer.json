@@ -43,8 +43,7 @@
             "database/factories"
         ],
         "files": [
-            "app/Helpers/respostas.php",
-            "app/Helpers/jwt.php"
+            "app/Helpers/respostas.php"
         ]
     },
     "autoload-dev": {

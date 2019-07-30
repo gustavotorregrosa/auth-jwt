@@ -22,7 +22,7 @@ let meuApp = new Vue({
             localStorage.removeItem("meuJwt")
             localStorage.removeItem("meuUsuario")
             this.usuario = ""
-            
+
         },
         login: function () {
             opcoes = {
@@ -37,31 +37,31 @@ let meuApp = new Vue({
 
             let status
             fetch(opcoes.url, opcoes).then(resposta => {
-                    status = resposta.status
-                    return resposta.json()
-                }).then(obj => {
-                    return {
-                        status,
-                        jwt: obj.jwt,
-                        usuario: obj.usuario
-                    }
-                }).then(resultado => {
-                    this.limparRegistros()
-                    if(resultado.status == 200){
-                        this.usuario = resultado.usuario
-                        localStorage.setItem('meuJwt', resultado.jwt)
-                        localStorage.setItem('meuUsuario', JSON.stringify(resultado.usuario))
-                    }else{
-                        throw new Error('Usuario/ senha errados')
-                    }
-                 })
+                status = resposta.status
+                return resposta.json()
+            }).then(obj => {
+                return {
+                    status,
+                    jwt: obj.jwt,
+                    usuario: obj.usuario
+                }
+            }).then(resultado => {
+                this.limparRegistros()
+                if (resultado.status == 200) {
+                    this.usuario = resultado.usuario
+                    localStorage.setItem('meuJwt', resultado.jwt)
+                    localStorage.setItem('meuUsuario', JSON.stringify(resultado.usuario))
+                } else {
+                    throw new Error('Usuario/ senha errados')
+                }
+            })
         },
         limparRegistros: function () {
             this.usuariologin = ''
             this.usuarioregistro = ''
         },
 
-        
+
         registrar: function () {
             opcoes = {
                 url: this.apiurl + 'usuario/criar',
@@ -107,42 +107,47 @@ function gerarObjRequest(opcoes) {
 }
 
 function jwtFetch(opcoes) {
-    function jwtFetchUnit(requestParam) {
+    function jwtFetchUnit(requestParam, delay = 0) {
         return new Promise((success, reject) => {
-            fetch(requestParam).then(response => {
-                if (response.status == 401) {
-                    throw new Error("Usuário inválido")
-                }
-                if (response.status == 301) {
-                    abrirModalLogin()
-                    throw new Error("Você será redirecionado para o login")
-                }
+            setTimeout(() => {
 
-                let status = response.status
-                success(response.json().then(conteudo => {
-                    return {
-                        status,
-                        conteudo
+                fetch(requestParam).then(response => {
+                    if (response.status == 401) {
+                        throw new Error("Usuário inválido")
                     }
-                }))
-            })
+                    if (response.status == 301) {
+                        abrirModalLogin()
+                        throw new Error("Você será redirecionado para o login")
+                    }
+    
+                    let status = response.status
+                    success(response.json().then(conteudo => {
+                        return {
+                            status,
+                            conteudo
+                        }
+                    }))
+                })
+    
+            }, delay)
+
+
+
+
         })
     }
 
 
     let fetchGarantido = new Promise((success, reject) => {
-        jwtFetchUnit(gerarObjRequest(opcoes)).then(resp => success(resp))
-
+            jwtFetchUnit(gerarObjRequest(opcoes)).then(resp => success(resp))
     })
 
     return fetchGarantido.then((result) => {
         if (result.status == 203) {
-            console.log("chegou no 203")
-            console.log(result)
             let objUsuario = result.conteudo
             localStorage.setItem('meuJwt', objUsuario.jwt)
             localStorage.setItem('meuUsuario', JSON.stringify(objUsuario.usuario))
-            return jwtFetchUnit(gerarObjRequest(opcoes)).then(resp => resp)
+            return jwtFetchUnit(gerarObjRequest(opcoes), 5000).then(resp => resp)
         }
         return result
     })

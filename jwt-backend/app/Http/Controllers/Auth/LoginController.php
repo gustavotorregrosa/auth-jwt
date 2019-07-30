@@ -43,7 +43,7 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
         if (\Auth::attempt($credentials)) {
             $usuario = \App\User::where('email', $credentials['email'])->first();
-            $conteudo = dadosUsuario($usuario);
+            $conteudo = \App\JWTValidator::dadosUsuario($usuario);
             return respostaCors($conteudo, 200);
         }
         return respostaCors("Usuario ou senha invalidos", 401);
