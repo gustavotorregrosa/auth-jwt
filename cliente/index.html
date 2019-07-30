@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+</head>
+
+<body>
+    <div id="meuApp">
+        <header>
+            <nav class="purple darken-4">
+                <div class="nav-wrapper">
+                    <a href="#" class="brand-logo">Logo</a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li v-if="!estaLogado"><a class="modal-trigger" href="#modal1">Login</a></li>
+                        <li v-if="!estaLogado"><a class="modal-trigger" href="#modal2">Registrar</a></li>
+                        <li v-if="estaLogado">{{ usuario.email }}</li>
+                        <li v-if="estaLogado"><a @click.prevent="logout" href="#">Logout</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <main style="margin-top: 5em;">
+            <div id="modal1" class="modal">
+                <div class="modal-content">
+                    <h6>Login</h6>
+                    <form class="col s12">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input v-model="usuariologin.email" id="email" type="email" class="validate">
+                                <label for="email">Email</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input v-model="usuariologin.password" id="password" type="password" class="validate">
+                                <label for="password">Password</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a @click.prevent="login" class="modal-close waves-effect waves-green btn-flat">Login</a>
+                </div>
+            </div>
+
+            <div id="modal2" class="modal">
+                <div class="modal-content">
+                    <h6>Registrar</h6>
+                    <form class="col s12">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input v-model="usuarioregistro.name" id="name" type="text" class="validate">
+                                <label for="name">Name</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input v-model="usuarioregistro.email" id="email" type="email" class="validate">
+                                <label for="email">Email</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input v-model="usuarioregistro.password" id="password" type="password" class="validate">
+                                <label for="password">Password</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a @click.prevent="registrar" class="modal-close waves-effect waves-green btn-flat">Registrar</a>
+                </div>
+            </div>
+
+            <div class="container">
+                <a @click.prevent="listarItens" class="waves-effect waves-teal btn-flat">Listar itens</a>
+            </div>
+        </main>
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
