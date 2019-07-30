@@ -19,7 +19,10 @@ let meuApp = new Vue({
             this.usuario = localStorage.getItem('meuUsuario')
         },
         logout: function () {
-            alert("logout")
+            localStorage.removeItem("meuJwt")
+            localStorage.removeItem("meuUsuario")
+            this.usuario = ""
+            
         },
         login: function () {
             opcoes = {
@@ -32,26 +35,33 @@ let meuApp = new Vue({
                 }
             }
 
-            fetch(opcoes.url, opcoes).then(resp => {
-                if (resp.status == 200) {
-                    resp.then(r => r.json()).then(conteudo => {
-                        console.log(conteudo)
-                        this.usuario = conteudo.usuario
-                        localStorage.setItem('meuJwt', conteudo.jwt)
-                        localStorage.setItem('meuUsuario', conteudo.usuario)
-                        this.limparRegistros()
-
-                    })
-                }else{
-                    throw new Error('Usuario/ senha errados')
-                }
-            })
+            let status
+            fetch(opcoes.url, opcoes).then(resposta => {
+                    status = resposta.status
+                    return resposta.json()
+                }).then(obj => {
+                    return {
+                        status,
+                        jwt: obj.jwt,
+                        usuario: obj.usuario
+                    }
+                }).then(resultado => {
+                    this.limparRegistros()
+                    if(resultado.status == 200){
+                        this.usuario = resultado.usuario
+                        localStorage.setItem('meuJwt', resultado.jwt)
+                        localStorage.setItem('meuUsuario', JSON.stringify(resultado.usuario))
+                    }else{
+                        throw new Error('Usuario/ senha errados')
+                    }
+                 })
         },
         limparRegistros: function () {
             this.usuariologin = ''
             this.usuarioregistro = ''
         },
 
+        
         registrar: function () {
             opcoes = {
                 url: this.apiurl + 'usuario/criar',
@@ -65,7 +75,7 @@ let meuApp = new Vue({
             fetch(opcoes.url, opcoes).then(resp => resp.json()).then(resp => {
                 this.usuario = resp.usuario
                 localStorage.setItem('meuJwt', resp.jwt)
-                localStorage.setItem('meuUsuario', resp.usuario)
+                localStorage.setItem('meuUsuario', JSON.stringify(resp.usuario))
                 this.limparRegistros()
             })
         },
@@ -87,7 +97,7 @@ let meuApp = new Vue({
 
 function gerarObjRequest(opcoes) {
     let jwt = localStorage.getItem("meuJwt")
-    if(jwt){
+    if (jwt) {
         let myHeaders = new Headers
         myHeaders.set("jwt", jwt)
         opcoes.headers = myHeaders
@@ -127,6 +137,8 @@ function jwtFetch(opcoes) {
 
     return fetchGarantido.then((result) => {
         if (result.status == 203) {
+            console.log("chegou no 203")
+            console.log(result)
             let objUsuario = result.conteudo
             localStorage.setItem('meuJwt', objUsuario.jwt)
             localStorage.setItem('meuUsuario', JSON.stringify(objUsuario.usuario))

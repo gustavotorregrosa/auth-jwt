@@ -28,6 +28,10 @@ class GenericoController extends Controller
             'assembler'
         ];
 
+        if(\Auth::check()) {
+          $itens[] = \Auth::user()->email; 
+        }
+
         return respostaCors($itens, 200);
     }
 

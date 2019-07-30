@@ -15,9 +15,8 @@ class CheckJWT
      */
     public function handle($request, Closure $next)
     {
-
         if(isJwtValido($request)){
-            \Log::debug("token foi valido sim");
+            \Auth::login(objUsuario(usuarioDoToken($request)));
             return $next($request);
         }
 
@@ -26,5 +25,11 @@ class CheckJWT
         }
 
         return respostaCors("Login com senha", 301);
+    }
+
+
+    public function terminate($request, $response)
+    {
+       Auth::logout();
     }
 }

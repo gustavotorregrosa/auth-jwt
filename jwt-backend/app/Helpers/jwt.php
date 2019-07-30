@@ -33,6 +33,14 @@ function usuarioDoToken($request){
 }
 
 
+function objUsuario($usuarioToken){
+    $usuario = new \App\User();
+    $usuario->id = $usuarioToken['id'];
+    $usuario->email = $usuarioToken['email'];
+    return $usuario;
+}
+
+
 function usuarioDoBanco($usuarioToken){
     if($usuario = \App\User::where('id', $usuarioToken['id'])->where('email', $usuarioToken['email'])->first()){
         return $usuario;
