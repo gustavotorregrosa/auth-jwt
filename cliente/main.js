@@ -89,8 +89,6 @@ let meuApp = new Vue({
             let resposta = await jwtFetch(opcoes)
             console.log(resposta)
         }
-
-
     }
 })
 
@@ -110,7 +108,6 @@ function jwtFetch(opcoes) {
     function jwtFetchUnit(requestParam, delay = 0) {
         return new Promise((success, reject) => {
             setTimeout(() => {
-
                 fetch(requestParam).then(response => {
                     if (response.status == 401) {
                         throw new Error("Usuário inválido")
@@ -128,12 +125,7 @@ function jwtFetch(opcoes) {
                         }
                     }))
                 })
-    
             }, delay)
-
-
-
-
         })
     }
 
@@ -147,7 +139,7 @@ function jwtFetch(opcoes) {
             let objUsuario = result.conteudo
             localStorage.setItem('meuJwt', objUsuario.jwt)
             localStorage.setItem('meuUsuario', JSON.stringify(objUsuario.usuario))
-            return jwtFetchUnit(gerarObjRequest(opcoes), 5000).then(resp => resp)
+            return jwtFetchUnit(gerarObjRequest(opcoes), 500).then(resp => resp)
         }
         return result
     })
@@ -158,7 +150,6 @@ function abrirModalLogin() {
     let elem = document.querySelector('#modal1');
     let instance = M.Modal.getInstance(elem);
     instance.open();
-
 }
 
 
