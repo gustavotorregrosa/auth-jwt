@@ -11,7 +11,7 @@
         </li>
         <li v-if="estaLogado">{{ usuario.email }}</li>
         <li v-if="estaLogado">
-          <a @click.prevent="logout" href="#">Logout</a>
+          <a @click.prevent="$emit('logout')" href="#">Logout</a>
         </li>
       </ul>
     </div>
@@ -22,15 +22,8 @@
 <script>
 export default {
   name: "NavBar",
-  props: ["usuario"],
-  computed: {
-    estaLogado: function() {
-      if (this.usuario) {
-        return true;
-      }
-      return false;
-    }
-  }
+  props: ["usuario", "estaLogado"],
+  
 };
 </script>
 
