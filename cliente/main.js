@@ -139,7 +139,7 @@ function jwtFetch(opcoes) {
             let objUsuario = result.conteudo
             localStorage.setItem('meuJwt', objUsuario.jwt)
             localStorage.setItem('meuUsuario', JSON.stringify(objUsuario.usuario))
-            return jwtFetchUnit(gerarObjRequest(opcoes), 500).then(resp => resp)
+            return jwtFetchUnit(gerarObjRequest(opcoes), 0).then(resp => resp)
         }
         return result
     })

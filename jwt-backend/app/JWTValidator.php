@@ -34,7 +34,7 @@ class JWTValidator
         $dataValidation = new ValidationData();
         if ($token->validate($dataValidation) && $token->verify($signer, env('APP_KEY'))) {
             $validade *= 60 * 60;
-            if (($token->getClaim('iat') + $validade > time()) && ($token->getClaim('iat') < time())) {
+            if (($token->getClaim('iat') + $validade >= time()) && ($token->getClaim('iat') <= time())) {
                 return true;
             }
         }
