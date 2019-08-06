@@ -22,7 +22,6 @@ let meuApp = new Vue({
             localStorage.removeItem("meuJwt")
             localStorage.removeItem("meuUsuario")
             this.usuario = ""
-
         },
         login: function () {
             opcoes = {
@@ -116,7 +115,7 @@ function jwtFetch(opcoes) {
                         abrirModalLogin()
                         throw new Error("Você será redirecionado para o login")
                     }
-    
+
                     let status = response.status
                     success(response.json().then(conteudo => {
                         return {
