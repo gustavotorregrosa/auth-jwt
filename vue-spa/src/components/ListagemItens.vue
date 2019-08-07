@@ -7,12 +7,22 @@
 </template>
 
 <script>
+import * as jwtHelpers from '../suporte/helpers-jwt';
 export default {
   name: "ListagemItens",
   data() {
     return {
-      produtos: ["chimarrao", "sabao", "celular"]
+      produtos: []
     };
+  },
+  updated: async function(){
+    console.log("parece q foi...")
+    //  opcoes = {
+    //    url: this.apiurl + 'lista-itens',
+    //    method: 'get'
+    //   };
+    //   let resposta = await jwtHelpers.jwtFetch(opcoes)
+    //   console.log(resposta)
   },
   props: ["estaLogado"]
 };

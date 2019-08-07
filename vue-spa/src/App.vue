@@ -20,7 +20,7 @@ import ModalLogin from "./components/ModalLogin.vue";
 import ModalRegistro from "./components/ModalRegistro.vue";
 import "materialize-css";
 import "materialize-css/dist/css/materialize.min.css";
-import { constants } from "crypto";
+// import { constants } from "crypto";
 // import * as jwtHelpers from './suporte/helpers-jwt';
 
 export default {
@@ -40,9 +40,9 @@ export default {
     }
   },
 
-  // mounted: function() {
-  //   this.usuario = JSON.parse(localStorage.getItem("meuUsuario"));
-  // },
+  mounted: function() {
+    this.usuario = JSON.parse(localStorage.getItem("meuUsuario"));
+  },
 
   methods: {
     logout: function() {
@@ -51,7 +51,7 @@ export default {
       this.usuario = null;
     },
     logarusuario: function(usuario) {
-      opcoes = {
+      let opcoes = {
         url: this.apiurl + "usuario/login",
         method: "post",
         body: JSON.stringify(usuario),
