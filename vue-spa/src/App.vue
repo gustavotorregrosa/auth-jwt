@@ -5,7 +5,7 @@
     </header>
     <main>
       <div class="container">
-        <ListagemItens :estaLogado="estaLogado" />
+        <ListagemItens @abrirmodallogin="abrirmodallogin" :apiurl="apiurl" :estaLogado="estaLogado" />
         <ModalLogin ref="modallogin" @logarusuario="logarusuario" />
         <ModalRegistro ref="modalregistro" @registrarusuario="registrarusuario" />
       </div>
@@ -87,6 +87,10 @@ export default {
             throw new Error("Usuario/ senha errados");
           }
         });
+    },
+
+    abrirmodallogin: function(){
+        console.log("...ola mundo...")
     },
 
     registrarusuario: function(usuario) {

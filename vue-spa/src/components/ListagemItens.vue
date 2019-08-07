@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import * as jwtHelpers from '../suporte/helpers-jwt';
+import { pJwtFetch } from "../suporte/helpers-jwt";
 export default {
   name: "ListagemItens",
   data() {
@@ -15,16 +15,21 @@ export default {
       produtos: []
     };
   },
-  updated: async function(){
-    console.log("parece q foi...")
-    //  opcoes = {
-    //    url: this.apiurl + 'lista-itens',
-    //    method: 'get'
-    //   };
-    //   let resposta = await jwtHelpers.jwtFetch(opcoes)
-    //   console.log(resposta)
+  mounted: function() {
+    let opcoes = {
+      url: this.apiurl + "lista-itens",
+      method: "get"
+    };
+
+    pJwtFetch(opcoes)
+      .then(resultado => {
+        this.produtos = resultado;
+      })
+      .catch(codigo => {
+        this.$emit("abrirmodallogin");
+      });
   },
-  props: ["estaLogado"]
+  props: ["estaLogado", "apiurl"]
 };
 </script>
 

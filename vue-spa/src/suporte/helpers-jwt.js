@@ -1,55 +1,51 @@
+export function pJwtFetch(opcoes) {
 
-
-function gerarObjRequest(opcoes) {
-    let jwt = localStorage.getItem("meuJwt")
-    if (jwt) {
-        let myHeaders = new Headers
-        myHeaders.set("jwt", jwt)
-        opcoes.headers = myHeaders
+    function gerarObjRequest(opcoes) {
+        let jwt = localStorage.getItem("meuJwt")
+        if (jwt) {
+            let myHeaders = new Headers
+            myHeaders.set("jwt", jwt)
+            opcoes.headers = myHeaders
+        }
+        return new Request(opcoes.url, opcoes)
     }
-    return new Request(opcoes.url, opcoes)
 
-}
-
-export function jwtFetch(opcoes) {
-    function jwtFetchUnit(requestParam, delay = 0) {
+    function jwtFetchUnit(requestParam) {
         return new Promise((success, reject) => {
-            setTimeout(() => {
-                fetch(requestParam).then(response => {
-                    if (response.status == 401) {
-                        throw new Error("Usuário inválido")
+            fetch(requestParam).then(response => {
+                if (![200, 203].includes(response.status)) {
+                    reject(response.status)
+                }
+                let status = response.status
+                success(response.json().then(conteudo => {
+                    return {
+                        status,
+                        conteudo
                     }
-                    if (response.status == 301) {
-                        abrirModalLogin()
-                        throw new Error("Você será redirecionado para o login")
-                    }
-
-                    let status = response.status
-                    success(response.json().then(conteudo => {
-                        return {
-                            status,
-                            conteudo
-                        }
-                    }))
-                })
-            }, delay)
+                }))
+            })
         })
     }
 
 
+
     let fetchGarantido = new Promise((success, reject) => {
-            jwtFetchUnit(gerarObjRequest(opcoes)).then(resp => success(resp))
+        jwtFetchUnit(gerarObjRequest(opcoes)).then(resp => success(resp)).catch(status => reject(status))
     })
 
-    return fetchGarantido.then((result) => {
-        if (result.status == 203) {
-            let objUsuario = result.conteudo
-            localStorage.setItem('meuJwt', objUsuario.jwt)
-            localStorage.setItem('meuUsuario', JSON.stringify(objUsuario.usuario))
-            return jwtFetchUnit(gerarObjRequest(opcoes), 0).then(resp => resp)
-        }
-        return result
+
+    return new Promise((success, reject) => {
+        fetchGarantido.then((result) => {
+            if(result.status == 203) {
+                let objUsuario = result.conteudo
+                localStorage.setItem('meuJwt', objUsuario.jwt)
+                localStorage.setItem('meuUsuario', JSON.stringify(objUsuario.usuario))
+                jwtFetchUnit(gerarObjRequest(opcoes)).then(resp => success(resp.conteudo))
+            }
+            success(result.conteudo)
+        }).catch(status => reject(status))
     })
 
 }
+
 
